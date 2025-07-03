@@ -287,8 +287,11 @@ class OPCUAProtocol(BaseProtocol):
         except Exception as e:
             self.logger.warning(f"Could not get namespace map: {e}")
     
-    def _build_node_id(self, address: Union[int, str]) -> ua.NodeId:
+    def _build_node_id(self, address: Union[int, str]) -> 'ua.NodeId':
         """Construir NodeId OPC UA."""
+        if not OPC_UA_AVAILABLE:
+            raise ImportError("asyncua library is required for OPC UA support")
+            
         if isinstance(address, str):
             # Formato: "ns=2;s=Tag1" o "i=84"
             if address.startswith('i='):
